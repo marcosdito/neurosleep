@@ -167,50 +167,6 @@ Three normalized tables capture the full experiment lifecycle:
 | `metrics` | Long-format (one row per metric value). Makes cross-model comparison trivial via SQL aggregation. |
 | `predictions` | Per-epoch predictions on the test set. Enables per-subject error analysis. |
 
-Example queries:
-
-```sql
--- Best model by macro-F1
-SELECT e.model_name, m.value
-FROM experiments e
-JOIN metrics m ON m.experiment_id = e.id
-WHERE m.name = 'macro_f1'
-ORDER BY m.value DESC;
-
--- Confusion-like analysis: which subjects are hardest?
-SELECT subject_id,
-       COUNT(*) FILTER (WHERE true_label = predicted_label) * 1.0 / COUNT(*) AS accuracy
-FROM predictions
-GROUP BY subject_id
-ORDER BY accuracy ASC;
-```
-
-## Design decisions
-
-**Subject-aware splitting.** Standard random splits cause severe data leakage in EEG: the same patient's epochs end up in both train and test sets, and models learn patient-specific patterns instead of stage-specific ones. Test metrics become inflated and fail to generalize. We use grouped splits at every step (train/val/test in Notebook 04, K-fold cross-validation in Notebook 03).
-
-**Macro-F1 over accuracy.** The dataset is class-imbalanced (N2 dominates, N1 and REM are rare). Plain accuracy is biased toward the majority class. Macro-F1 averages per-class F1 equally, surfacing model performance on minority classes.
-
-**Robust normalization over z-score.** EEG signals contain occasional high-amplitude artifacts that destabilize mean/std-based normalization. Median / IQR normalization is robust to these outliers.
-
-**Three feature families.** Time-domain features capture statistical and morphological properties. Frequency-domain features capture spectral composition, which is the most informative dimension for sleep staging. Wavelet features capture transient events (sleep spindles, K-complexes) that are localized in both time and frequency.
-
-**JSONB hyperparameters.** Different models have different hyperparameter sets. Storing them as JSONB rather than dedicated columns keeps the schema stable across model types while preserving query capability via PostgreSQL's JSON operators.
-
-## Honest limitations
-
-- **Epoch independence assumption.** We classify each 30-second window in isolation. Real sleep scoring uses temporal context — neighboring epochs constrain plausible transitions. Adding a sequence model (LSTM, Transformer) on top of CNN features is a known way to add 3-8 macro-F1 points.
-- **Small subject pool.** This is a study project; the pipeline is run on a small subset of Sleep-EDF subjects. Increasing the subject count is the simplest path to better generalization.
-- **No hyperparameter search.** Architectures and hyperparameters were chosen by reasoning, not by random or Bayesian search. A proper study would include Optuna or similar.
-- **No artifact handling beyond filtering.** Independent component analysis (ICA) for ocular and muscle artifact removal is standard in clinical EEG but not applied here.
-
-## Future work
-
-- Sequence modeling: stack a bidirectional LSTM or small Transformer over per-epoch CNN features.
-- Cross-dataset validation on additional sleep datasets (SHHS, MASS).
-- Hyperparameter optimization with Optuna.
-- Active artifact handling via ICA.
-- Multi-channel modeling treating each EEG derivation as a separate input branch.
 
 ## License
 
@@ -221,4 +177,4 @@ MIT — see `LICENSE`.
 **Marcos Vinícius Rocha Gomes**
 - Undergraduate researcher at Instituto Santos Dumont (ISD)
 - Bachelor of IT, Universidade Federal do Rio Grande do Norte (UFRN)
-- GitHub: [@marcosdito](https://github.com/marcosdito)s
+- GitHub: [@marcosdito](https://github.com/marcosdito)
