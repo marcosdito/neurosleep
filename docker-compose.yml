@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: neurosleep-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: neurosleep
+      POSTGRES_PASSWORD: neurosleep
+      POSTGRES_DB: neurosleep
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U neurosleep -d neurosleep"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: neurosleep-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg2://neurosleep:neurosleep@postgres:5432/neurosleep
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    # By default, run the persistence script.
+    # Override with `docker compose run app <command>` for other tasks.
+    command: ["python", "scripts/save_to_db.py"]
+
+volumes:
+  pgdata:

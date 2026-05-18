@@ -1,11 +1,47 @@
-venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+*.egg-info/
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Data — too large for git
 data/raw/*
 data/processed/*
+data/results/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
-.env
+!data/results/.gitkeep
+
+# Trained models
+models/*.keras
+models/*.h5
+models/*.pkl
+
+# MLflow
 mlruns/
-.ipynb_checkpoints/
+
+# OS
 .DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Env files
+.env
+.env.local
+
+# Docker
+*.pid
