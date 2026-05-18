@@ -1,0 +1,28 @@
+{
+  "cnn": {
+    "model": "CNN_1D_Keras",
+    "accuracy": 0.3585359980736817,
+    "balanced_accuracy": 0.5286043186332913,
+    "macro_f1": 0.30457605151046474,
+    "weighted_f1": 0.37157786752011535,
+    "cohen_kappa": 0.2504788840178307,
+    "test_loss": 1.285210132598877,
+    "epochs_trained": 10
+  },
+  "train_subjects": [
+    0
+  ],
+  "val_subjects": [
+    2
+  ],
+  "test_subjects": [
+    1,
+    3
+  ],
+  "hyperparameters": {
+    "epochs": 50,
+    "batch_size": 64,
+    "optimizer": "adam",
+    "initial_lr": 0.001
+  }
+}

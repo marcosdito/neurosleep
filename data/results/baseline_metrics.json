@@ -1,0 +1,43 @@
+{
+  "random_forest": {
+    "model": "Random Forest",
+    "accuracy": 0.897664339032025,
+    "balanced_accuracy": 0.750088743013013,
+    "macro_f1": 0.763360862411752,
+    "weighted_f1": 0.8981865196452568,
+    "cohen_kappa": 0.8244251671866526,
+    "fit_seconds": 0.26662302017211914,
+    "predict_seconds": 0.02680492401123047
+  },
+  "svm_rbf": {
+    "model": "SVM (RBF)",
+    "accuracy": 0.8526366482061161,
+    "balanced_accuracy": 0.7504190733127517,
+    "macro_f1": 0.6966139049797221,
+    "weighted_f1": 0.8626851633603478,
+    "cohen_kappa": 0.7552329342249832,
+    "fit_seconds": 0.06307673454284668,
+    "predict_seconds": 0.21531105041503906
+  },
+  "cv_macro_f1": {
+    "mean": 0.7313769786300091,
+    "std": 0.06491402331831439,
+    "folds": [
+      0.7609241180771931,
+      0.6853181497982643,
+      0.8224716867483807,
+      0.6567939598961978
+    ]
+  },
+  "test_subjects": [
+    1,
+    3
+  ],
+  "train_subjects": [
+    0,
+    2
+  ],
+  "n_train": 3824,
+  "n_test": 4153,
+  "n_features": 80
+}
